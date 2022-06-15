@@ -2,6 +2,20 @@ from py3270 import Emulator
 import sys
 import time
 
+if len(sys.argv) <= 2:
+	print("Usage: tsoUserEnum.py <target> <path to user list>")
+	sys.exit()
+
+target = sys.argv[1]
+user_list_location = sys.argv[2]
+
+def file2list(filename):
+	lines = []
+	with open(filename) as file:
+    		lines = file.readlines()
+    		lines = [line.rstrip() for line in lines]
+	return lines
+	
 def user_enum(count, users, number_of_users):
 	# use x3270 so you can see what is going on
 	#em = Emulator(visible=True)
@@ -11,7 +25,7 @@ def user_enum(count, users, number_of_users):
 
 	# connect to target
 	em.connect('192.168.56.21:2323')
-	print("[i] Connected to target")
+	#print("[i] Connected to target")
 	time.sleep(1)
 
 	# enter 'tso' at the VTAM prompt
@@ -36,7 +50,7 @@ def user_enum(count, users, number_of_users):
 			em.terminate()
 			return count  
 		elif em.string_found(4, 53, 'RACF'):
-			print("[+] User: " + users[count] + " is valid")
+			print("[" + str(count+1) + "] User: " + users[count] + " is valid")
 			#print("[i] Logging back in")
 			em.terminate()
 			count += 1
@@ -51,7 +65,7 @@ def user_enum(count, users, number_of_users):
 	return count
 
 # define a list of users
-users = ['1admin','2test','3asd','4sdf','5dfg','6fgh','7ghj','8hjk','9jkl','10hjk','11jkl','12zxc','ibmuser', '14sdfh']
+users = file2list(user_list_location)
 number_of_users = len(users)
 
 progress = 0
