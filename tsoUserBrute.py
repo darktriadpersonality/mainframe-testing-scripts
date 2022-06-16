@@ -2,13 +2,14 @@ from py3270 import Emulator
 import sys
 import time
 
-if len(sys.argv) <= 3:
-	print("Usage: tsoUserEnum.py <target> <username> <path to password list>")
+if len(sys.argv) <= 4:
+	print("Usage: tsoUserEnum.py <host> <port> <username> <path to password list>")
 	sys.exit()
 
-target = sys.argv[1]
-username = sys.argv[2]
-password_list_location = sys.argv[3]
+host = sys.argv[1]
+port = sys.argv[2]
+username = sys.argv[3]
+password_list_location = sys.argv[4]
 
 delay_time = 1
 
@@ -26,8 +27,8 @@ def user_enum(count, passwords, number_of_passwords):
 	# or not (uses s3270)
 	em = Emulator()
 
-	# connect to target
-	em.connect('192.168.56.21:2323')
+	# connect to host
+	em.connect('%s:%d' % (host, int(port)))
 	em.wait_for_field()
 	time.sleep(delay_time)
 	

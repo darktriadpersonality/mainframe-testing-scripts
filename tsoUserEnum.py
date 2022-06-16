@@ -2,12 +2,15 @@ from py3270 import Emulator
 import sys
 import time
 
-if len(sys.argv) <= 2:
-	print("Usage: tsoUserEnum.py <target> <path to user list>")
+if len(sys.argv) <= 3:
+	print("Usage: tsoUserEnum.py <host> <port> <path to user list>")
 	sys.exit()
 
-target = sys.argv[1]
-user_list_location = sys.argv[2]
+host = sys.argv[1]
+port = sys.argv[2]
+user_list_location = sys.argv[3]
+
+delay_time = 0.1
 
 def file2list(filename):
 	lines = []
@@ -23,22 +26,24 @@ def user_enum(count, users, number_of_users):
 	# or not (uses s3270)
 	em = Emulator()
 
-	# connect to target
-	em.connect('192.168.56.21:2323')
-	#print("[i] Connected to target")
-	time.sleep(1)
+	# connect to host
+	em.connect('%s:%d' % (host, int(port)))
+	em.wait_for_field()
+	time.sleep(delay_time)
+	#print("[i] Connected to host")
 
 	# enter 'tso' at the VTAM prompt
 	em.fill_field(21, 22, 'tso', 3)
-	time.sleep(1)
 	em.send_enter()
+	em.wait_for_field()
+	time.sleep(delay_time)
 	
 	# user enumeration loop
 	while count < number_of_users:
-		time.sleep(1)
 		em.send_string(users[count], None, None)
-		time.sleep(1)
 		em.send_enter()
+		em.wait_for_field()
+		time.sleep(delay_time)
 		# check for IKJ56420I message
 		message = em.string_get(2,2, 9)
 		#print("[i] Message: ", message)
@@ -74,6 +79,4 @@ print("[i] Attempting to enumerate " + str(number_of_users) + " users")
 
 while progress < number_of_users:
 	progress = user_enum(progress, users, number_of_users)
-	#print(progress)
- 
 
