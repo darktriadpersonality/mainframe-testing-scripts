@@ -51,7 +51,7 @@ def user_enum(count, users, number_of_users):
 			#print("[-] User: " + users[count] + " is not valid")
 			None
 		elif em.string_found(2, 2, 'IKJ56428I'):
-			print("[i] Guesses exceeded, logging back in")
+			#print("[i] Guesses exceeded, logging back in")
 			em.terminate()
 			return count  
 		elif em.string_found(4, 53, 'RACF'):
@@ -64,7 +64,7 @@ def user_enum(count, users, number_of_users):
 			#print("[-] User: " + users[count] + " is not valid")
 			None
 		count += 1
-		print("["+str(count)+"]")
+		#print("["+str(count)+"]")
 	# disconnect from host and kill subprocess
 	em.terminate()
 	return count
