@@ -5,7 +5,7 @@ import time
 import signal
 
 if len(sys.argv) <= 3:
-	print("Usage: cicsEnum.py <host> <port> <mode> where mode can be TRANS or FILE")
+	print("Usage: CECIenum.py <host> <port> <mode> where mode can be TRANS or FILE")
 	sys.exit()
 
 host = sys.argv[1]
