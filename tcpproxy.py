@@ -9,6 +9,26 @@ import threading
 
 HEX_FILTER = ''.join([(len(repr(chr(i))) == 3) and chr(i) or '.' for i in range(256)])
 
+def position_from_rowcolumn(rows,cols):
+    a = rows * 80
+    b = a + cols
+    return b
+    
+
+# useful for replacing set buffer with an arbitrary value
+# https://www.ibm.com/docs/en/cics-ts/5.2?topic=stream-set-buffer-address-order    
+def decimal_to_twelvebit_hex(my_int):    
+    a = "{0:12b}"
+    b = a[:6]
+    c = a[6:12]
+    d = '11' + b
+    e = '11' + c
+    f = int(d,2)
+    g = int(e,2)
+    h = hex(f)
+    i = hex(g)
+    return(h,i)
+
 def hexdump(src, length=16, show=True):
 	if isinstance(src, bytes):
 		#src = src.decode()
@@ -75,11 +95,12 @@ def proxy_handler(client_socket, remote_host, remote_port, receive_first):
 			client_socket.send(remote_buffer)
 			print("[<==] Sent to localhost.")
 		
-		if not len(local_buffer) or not len(remote_buffer):
-			client_socket.close()
-			remote_socket.close()
-			print("[*] No more data. Closing connections.")
-			break
+        # commented in order to listen forever
+		#if not len(local_buffer) or not len(remote_buffer):
+		#	client_socket.close()
+		#	remote_socket.close()
+		#	print("[*] No more data. Closing connections.")
+		#	break
 			
 def server_loop(local_host, local_port, remote_host, remote_port, receive_first):
 	server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
